@@ -123,15 +123,6 @@ def sub_trino():
     call iceberg.system.register_table(schema_name => 'raw_vault', table_name => 'summary_{run_time}', table_location => 's3a://warehouse/staging_vault/summary_{run_time}');
     call iceberg.system.register_table(schema_name => 'raw_vault', table_name => 'gr_{run_time}', table_location => 's3a://warehouse/staging_vault/group_{run_time}');
     call iceberg.system.register_table(schema_name => 'raw_vault', table_name => 'exchange_index_{run_time}', table_location => 's3a://warehouse/staging_vault/exchange_index_{run_time}');
-    create table if not exists summary
-    as select *
-    from summary_{run_time};
-    create table if not exists gr
-    as select *
-    from gr_{run_time};
-    create table if not exists exchange_index
-    as select *
-    from exchange_index_{run_time};
     insert into summary
     select *
     from summary_{run_time};
@@ -147,6 +138,17 @@ def sub_trino():
     """.format(run_time=run_time)
     file.write(data)
     file.close()
+
+    # create table if not exists summary
+    # as select *
+    # from summary_{run_time};
+    # create table if not exists gr
+    # as select *
+    # from gr_{run_time};
+    # create table if not exists exchange_index
+    # as select *
+    # from exchange_index_{run_time};
+
 
 def c_j_t_p_t_p():
     if not client.bucket_exists("processing"):
